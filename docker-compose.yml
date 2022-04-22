@@ -1,0 +1,26 @@
+version: '2'
+services:
+  curiosity-controller:
+    container_name: curiosity-controller
+    build:
+      dockerfile: Dockerfile
+    image: curiosity-controller:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - /curiosity/dir:/app
+    links:
+      - "elastic-search:elastic-search"
+    restart: on-failure
+  elastic-search:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elast_data:/urs/share/elasticsearch/data
+    environment:
+      - "discovery.type=single-node"
+      - xpack.security.enabled=false
+volumes:
+  elast_data:
